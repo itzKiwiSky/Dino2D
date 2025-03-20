@@ -1,4 +1,4 @@
-Kiwi2D = {}
+Dino2D = {}
 
 local KIWI_PATH = (...) .. "."
 
@@ -26,23 +26,25 @@ for a = 1, #addons, 1 do
 end
 
 -- interfaces --
-Kiwi2D.components = {}
+Dino2D.components = {}
 
 -- apis --
-Kiwi2D.Vec2 = import 'Math.Vec2'
-Kiwi2D.scene = import 'Core.Scene'
-Kiwi2D.object = import 'Core.Object'
-Kiwi2D.assets = import 'Core.AssetPool'
-Kiwi2D.signal = import 'Utils.Signal'
+Dino2D.Vec2 = import 'Math.Vec2'
+Dino2D.scene = import 'Core.Scene'
+Dino2D.object = import 'Core.Object'
+Dino2D.assets = import 'Core.AssetPool'
+Dino2D.signal = import 'Utils.Signal'
 
 -- preload some essential stuff --
-Kiwi2D.assets.addImage("logo", KIWI_PATH .. "/assets/images/icon.png")
-Kiwi2D.assets.addFont("fredoka", KIWI_PATH .. "/assets/fonts/fredoka_regular.ttf")
+Dino2D.assets.addImage("logo", KIWI_PATH .. "/assets/images/icon.png")
+Dino2D.assets.addFont("fredoka", KIWI_PATH .. "/assets/fonts/fredoka_regular.ttf")
 
-Kiwi2D.initialized = false
+print(inspect(Dino2D.assets))
 
-function Kiwi2D.load(config)
-    assert(Kiwi2D.initialized == false, "[LovePlayError] : Loveplay is already initialized")
+Dino2D.initialized = false
+
+function Dino2D.load(config)
+    assert(Dino2D.initialized == false, "[LovePlayError] : Loveplay is already initialized")
 
     -- load configs --
     config = config or {}
@@ -50,7 +52,7 @@ function Kiwi2D.load(config)
         width = config.width or 640,
         height = config.height or 480,
         vsync = config.vsync or false,
-        title = config.title or "Powered with Kiwi2D",
+        title = config.title or "Powered with Dino2D",
         scene = config.scene or "root",
         resizable = config.resizable or true,
         fullscreen = config.fullscreen or false,
@@ -71,7 +73,7 @@ function Kiwi2D.load(config)
     local components = fsutil.scanFolder(KIWI_PATH .. "/src/Components")
     for c = 1, #components, 1 do
         local comp = components[c]:gsub(".lua", "")
-        Kiwi2D.components[components[c]:match("[^/]+$"):gsub(".lua", "")] = require(comp:gsub("/", "%."))
+        Dino2D.components[components[c]:match("[^/]+$"):gsub(".lua", "")] = require(comp:gsub("/", "%."))
     end
 
     love.graphics.setDefaultFilter(
@@ -81,9 +83,9 @@ function Kiwi2D.load(config)
 
     push.setupScreen(conf.width, conf.height, { upscale = "normal" })
 
-     -- create a default scene --
-    Kiwi2D.scene.newScene(conf.scene, function() end)
-    Kiwi2D.scene.switchScene(conf.scene)
+    -- create a default scene --
+    Dino2D.scene.newScene(conf.scene, function() end)
+    Dino2D.scene.switchScene(conf.scene)
 
     love.window.setTitle(conf.title)
     love.filesystem.setIdentity(conf.packageid)
@@ -130,16 +132,18 @@ function Kiwi2D.load(config)
                 love.graphics.origin()
 
                 love.graphics.push("all")
-                love.graphics.setCanvas(mainCanvas)
-                    Kiwi2D.scene.draw()
-                love.graphics.setCanvas()
+                    love.graphics.setCanvas(mainCanvas)
+                        love.graphics.clear(love.graphics.getBackgroundColor())
+                        Dino2D.scene.draw()
+                    love.graphics.setCanvas()
+                    love.graphics.origin()
                 love.graphics.pop("all")
 
                 love.graphics.clear(love.graphics.getBackgroundColor())
                 
                     love.graphics.setColor(1, 1, 1, 1)
                     push.start()
-                --if love.draw then love.draw() end
+
                         love.graphics.draw(mainCanvas)
 
                     push.finish()
@@ -153,6 +157,10 @@ function Kiwi2D.load(config)
         local utf8 = require("utf8")
 
         -- assets --
+        local fonterr = love.graphics.newFont(KIWI_PATH .. "/assets/fonts/fredoka_regular.ttf", 25)
+
+        push.setupScreen(conf.width, conf.height, { upscale = "normal" })
+        local curTitle = love.window.getTitle()
 
         local function error_printer(msg, layer)
             print((debug.traceback("Error: " .. tostring(msg), 1+(layer or 1)):gsub("\n[^\n]+$", "")))
@@ -228,8 +236,16 @@ function Kiwi2D.load(config)
         p = p:gsub("\t", "")
         p = p:gsub("%[string \"(.-)\"%]", "%1")
 
+        love.window.setTitle("[Dino2D Runtime Error] | " .. curTitle)
+
         local function __draw()
-            
+            love.graphics.clear(223 / 255, 77 / 255, 67 / 255)
+
+                push.start()
+                local pos = 70
+                love.graphics.printf(p, fonterr, pos, pos, push.getWidth() - pos)
+                push.finish()
+            love.graphics.present()
         end
         
         local function __update()
@@ -261,14 +277,13 @@ function Kiwi2D.load(config)
                     end
                 end
             end
-    
-            __draw()
-    
+                __draw()
+
             if love.timer then
-                love.timer.sleep(0.1)
+                love.timer.sleep(0.001)
             end
         end
     end
 end
 
-return Kiwi2D
+return Dino2D

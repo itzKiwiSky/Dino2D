@@ -11,7 +11,7 @@ local alignments = { [0] = "left", "center", "right" }
 
 function TextRendererComponent.new()
     local self = setmetatable({}, TextRendererComponent)
-    self.font = Loveplay.assets.get(Loveplay.assets.assetType.FONT, "fredoka", { fontsize = 20 })
+    self.font = Dino2D.assets.get(Dino2D.assets.assetType.FONT, "fredoka", { fontsize = 20 })
     self.text = ""
     self.color = Color.BLACK
     self.align = TextRendererComponent.ALIGNMENT.CENTER

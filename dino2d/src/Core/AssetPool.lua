@@ -15,10 +15,10 @@ AssetPool.AUDIOLOADTYPE = {
 }
 
 AssetPool.ASSETTYPE = {
-    ["AUDIO"] = "audios",
-    ["FONT"] = "fonts",
-    ["IMAGE"] = "images",
-    ["SHADER"] = "shaders"
+    AUDIO = "audios",
+    FONT = "fonts",
+    IMAGE = "images",
+    SHADER = "shaders"
 }
 
 function AssetPool.get(type, tag, args)
@@ -26,12 +26,15 @@ function AssetPool.get(type, tag, args)
         fontsize = 20,
         sourcetype = AssetPool.AUDIOLOADTYPE.STATIC
     }
-    --print(assetType[type])
+
+    --print("cu")
+    print(type, tag)
     return switch(type, {
         ["audios"] = function()
             return AssetPool.audios[tag .. "_" .. args.sourcetype]
         end,
         ["fonts"] = function()
+            print("d")
             if AssetPool.fonts.paths[tag] then
                 if not AssetPool.fonts.cache[tag .. "-" .. args.fontsize] then
                     AssetPool.fonts.cache[tag .. "-" .. args.fontsize] = AssetPool.fonts.paths[tag]:makeFont(args.fontsize)

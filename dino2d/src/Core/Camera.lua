@@ -1,5 +1,3 @@
-
----@class Loveplay.Camera
 local LPCamera = {}
 LPCamera.__index = LPCamera
 
@@ -14,15 +12,8 @@ function LPCamera.new(x, y, zoom, rotation)
 end
 
 --- Attach camera to begin transformation
----@param x number
----@param y number
----@param w number
----@param h number
-function LPCamera:start(x, y, w, h)
-    x, y = x or 0, y or 0
-    w, h = w or love.graphics.getWidth(), h or love.graphics.getHeight()
-
-    local cx, cy = x + w / 2, y + h / 2
+function LPCamera:start()
+    local cx, cy = push.getWidth() / 2, push.getHeight() / 2
     love.graphics.push("all")
     love.graphics.translate(cx, cy)
     love.graphics.scale(self.zoom)

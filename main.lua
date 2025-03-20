@@ -2,6 +2,8 @@ local dino2d = require 'dino2d'
 
 dino2d.load({ debug = true })
 
+error("prorpistal")
+
 dino2d.scene.newScene("main", function(scene)
     local obj = dino2d.object({ "test" }, {
         dino2d.components.Transform,

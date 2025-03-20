@@ -3,7 +3,7 @@ local vec2 = import 'Math.Vec2'
 local Color = import 'Utils.Color'
 
 local DrawableComponent = {
-    drawable = Kiwi2D.assets.get(Kiwi2D.assets.ASSETTYPE.IMAGE, "logo"),
+    drawable = Dino2D.assets.get(Dino2D.assets.ASSETTYPE.IMAGE, "logo"),
     scale = vec2.ZERO(),
     origin = vec2.ZERO(),
     shear = vec2.ZERO(),

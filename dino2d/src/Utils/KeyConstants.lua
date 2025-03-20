@@ -1,5 +1,3 @@
---- @class kiwi2D.Utils.KeyConstants
-
 return {
     NONE = "none",
     A = "a",

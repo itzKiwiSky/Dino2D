@@ -1,13 +1,7 @@
 local bit = require 'bit'
 
----
---- @class loveplay.modules.Utils.Color
----
 local Color = {}
 
----
----@private
----
 local function hexToRGBA(hex)
     local r = bit.band(bit.rshift(hex, 24), 0xFF) / 255
     local g = bit.band(bit.rshift(hex, 16), 0xFF) / 255

@@ -7,17 +7,6 @@ LPScene.currentScene = "root"
 LPScene.camera = camera.new(0, 0)
 
 local function drawBGGrid(width, height, cellSize)
-    --[[
-        for(let y = 0; y < length; y++)
-            for(let x = Math.floor(offsetX); x < offsetX + 4; x++)
-                k.drawRect({
-                    width: tileSize,
-                    height: tileSize,
-                    pos: k.vec2(x * tileSize, y * tileSize),
-                    color: (x + y) % 2 ? k.rgb(128, 128, 128) : k.rgb(65, 65, 65)
-                });
-    ]]--
-
     for y = 0, math.floor(height), 1 do
         for x = 0, math.floor(width), 1 do
             local ogc = { love.graphics.getColor() }
@@ -47,8 +36,6 @@ function LPScene.newScene(name, fun)
         objects = {},
         def = fun
     }
-    --fun(LPScene.scenes[name])
-    --LPScene.sceneLoad()
 end
 
 function LPScene.switchScene(name)
