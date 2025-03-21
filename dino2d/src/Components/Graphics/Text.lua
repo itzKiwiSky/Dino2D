@@ -8,7 +8,7 @@ return function()
 
     TextRendererComponent.ALIGNMENT = { LEFT = "left", CENTER = "center", RIGHT = "right" }
 
-    TextRendererComponent.font = Dino2D.assets.get(Dino2D.assets.assetType.FONT, "fredoka", { fontsize = 20 })
+    TextRendererComponent.font = Dino2D.assets.get(Dino2D.assets.ASSETTYPE.FONT, "fredoka", { fontsize = 25 })
     TextRendererComponent.text = ""
     TextRendererComponent.color = Color.BLACK
     TextRendererComponent.align = TextRendererComponent.ALIGNMENT.CENTER
@@ -16,7 +16,7 @@ return function()
     TextRendererComponent.textLimit = 128
     TextRendererComponent.shadow = false
     TextRendererComponent.shadowColor = Color.fromInt(0x00000080)
-    TextRendererComponent.shadowOffset = vec2(5, 5)
+    TextRendererComponent.shadowOffset = vec2(2, 2)
 
     function TextRendererComponent:__draw()
         local oldColor = { love.graphics.getColor() }
@@ -24,7 +24,7 @@ return function()
             love.graphics.printf(self.text, self.font, self.pos.x, self.pos.y, self.textLimit, self.align)
             if self.shadow then
                 love.graphics.setColor(self.shadowColor)
-                love.graphics.printf(self.text, self.font, self.pos.x + self.shadowOffset.x, self.pos.y + self.shadowOffset.y, self.textLimit, alignments[self.align])
+                love.graphics.printf(self.text, self.font, self.pos.x + self.shadowOffset.x, self.pos.y + self.shadowOffset.y, self.textLimit, self.align)
             end
         love.graphics.setColor(oldColor)
     end

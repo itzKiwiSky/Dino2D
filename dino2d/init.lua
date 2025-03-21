@@ -34,6 +34,7 @@ Dino2D.scene = import 'Core.Scene'
 Dino2D.object = import 'Core.Object'
 Dino2D.assets = import 'Core.AssetPool'
 Dino2D.signal = import 'Utils.Signal'
+Dino2D.Color = import 'Utils.Color'
 
 -- preload some essential stuff --
 Dino2D.assets.addImage("logo", KIWI_PATH .. "/assets/images/icon.png")
@@ -63,9 +64,18 @@ function Dino2D.load(config)
         antialiasing = config.antialiasing or false
     }
 
+    love.graphics.setDefaultFilter(
+        conf.antialiasing and "linear" or "nearest",
+        conf.antialiasing and "linear" or "nearest"
+    )
+
     love.window.setMode(conf.width, conf.height, { resizable = conf.resizable, vsync = conf.vsync, fullscreen = conf.fullscreen })
 
     local mainCanvas = love.graphics.newCanvas(conf.width, conf.height)
+    mainCanvas:setFilter(
+        conf.antialiasing and "linear" or "nearest",
+        conf.antialiasing and "linear" or "nearest"
+    )
 
     -- load components --
     local components = fsutil.scanFolder(KIWI_PATH .. "/src/Components")
@@ -74,12 +84,10 @@ function Dino2D.load(config)
         Dino2D.components[components[c]:match("[^/]+$"):gsub(".lua", "")] = require(comp:gsub("/", "%."))
     end
 
-    love.graphics.setDefaultFilter(
-        conf.antialiasing and "linear" or "nearest",
-        conf.antialiasing and "linear" or "nearest"
-    )
-
-    push.setupScreen(conf.width, conf.height, { upscale = "normal" })
+    push.setupScreen(conf.width, conf.height, { upscale = conf.antialiasing and "normal" or "pixel-perfect" })
+    
+    Dino2D.windowWidth = push.getWidth()
+    Dino2D.windowHeight = push.getHeight()
 
     -- create a default scene --
     Dino2D.scene.newScene(conf.scene, function() end)
@@ -136,14 +144,14 @@ function Dino2D.load(config)
                         love.graphics.clear(love.graphics.getBackgroundColor())
                         Dino2D.scene.draw()
                     love.graphics.setCanvas()
-                    love.graphics.origin()
                 love.graphics.pop("all")
 
+                love.graphics.origin()
                 love.graphics.clear(love.graphics.getBackgroundColor())
                 
                     love.graphics.setColor(1, 1, 1, 1)
                     push.start()
-
+                        
                         love.graphics.draw(mainCanvas)
 
                     push.finish()

@@ -32,7 +32,6 @@ function AssetPool.get(type, tag, args)
             return AssetPool.audios[tag .. "_" .. args.sourcetype]
         end,
         ["fonts"] = function()
-            print("d")
             if AssetPool.fonts.paths[tag] then
                 if not AssetPool.fonts.cache[tag .. "-" .. args.fontsize] then
                     AssetPool.fonts.cache[tag .. "-" .. args.fontsize] = AssetPool.fonts.paths[tag]:makeFont(args.fontsize)
