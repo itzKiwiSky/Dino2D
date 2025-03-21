@@ -35,7 +35,7 @@ return function(tags, components)
 
     for _, component in ipairs(components) do
         -- Adiciona métodos na metatabela
-        for k, v in pairs(component) do
+        for k, v in pairs(component()) do
             if type(v) == "function" then
                 meta.__index[k] = v -- Métodos são armazenados corretamente
             else

@@ -2,8 +2,6 @@ local dino2d = require 'dino2d'
 
 dino2d.load({ debug = true })
 
-error("prorpistal")
-
 dino2d.scene.newScene("main", function(scene)
     local obj = dino2d.object({ "test" }, {
         dino2d.components.Transform,
@@ -21,7 +19,7 @@ dino2d.scene.newScene("main", function(scene)
     dino2d.scene.add(obj)
 
     scene.sceneUpdate = function(st, elapsed)
-        obj.pos.x = obj.pos.x + 10 * elapsed
+        --obj.pos.x = obj.pos.x + 10 * elapsed
     end
 end)
 

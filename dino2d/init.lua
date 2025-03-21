@@ -39,8 +39,6 @@ Dino2D.signal = import 'Utils.Signal'
 Dino2D.assets.addImage("logo", KIWI_PATH .. "/assets/images/icon.png")
 Dino2D.assets.addFont("fredoka", KIWI_PATH .. "/assets/fonts/fredoka_regular.ttf")
 
-print(inspect(Dino2D.assets))
-
 Dino2D.initialized = false
 
 function Dino2D.load(config)
@@ -128,6 +126,8 @@ function Dino2D.load(config)
                 elapsed = love.timer.step()
             end
 
+            Dino2D.scene.update(elapsed)
+
             if love.graphics and love.graphics.isActive() then
                 love.graphics.origin()
 
@@ -157,7 +157,7 @@ function Dino2D.load(config)
         local utf8 = require("utf8")
 
         -- assets --
-        local fonterr = love.graphics.newFont(KIWI_PATH .. "/assets/fonts/fredoka_regular.ttf", 25)
+        local fonterr = love.graphics.newFont(KIWI_PATH .. "/assets/fonts/fredoka_regular.ttf", 18)
 
         push.setupScreen(conf.width, conf.height, { upscale = "normal" })
         local curTitle = love.window.getTitle()
@@ -198,8 +198,7 @@ function Dino2D.load(config)
         end
         if love.audio then love.audio.stop() end
 
-        love.graphics.reset()
-        local font = love.graphics.setNewFont(14)
+        --love.graphics.reset()
     
         love.graphics.setColor(1, 1, 1)
     
@@ -240,7 +239,6 @@ function Dino2D.load(config)
 
         local function __draw()
             love.graphics.clear(223 / 255, 77 / 255, 67 / 255)
-
                 push.start()
                 local pos = 70
                 love.graphics.printf(p, fonterr, pos, pos, push.getWidth() - pos)

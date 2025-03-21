@@ -27,8 +27,6 @@ function AssetPool.get(type, tag, args)
         sourcetype = AssetPool.AUDIOLOADTYPE.STATIC
     }
 
-    --print("cu")
-    print(type, tag)
     return switch(type, {
         ["audios"] = function()
             return AssetPool.audios[tag .. "_" .. args.sourcetype]
