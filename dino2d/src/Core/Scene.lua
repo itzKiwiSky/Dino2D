@@ -39,8 +39,12 @@ function LPSceneEvents.sceneUpdate(elapsed)end
 function Scene.newScene(name, fun)
     Scene.scenes[name] = {
         objects = {},
-        def = fun
+        def = fun or function() end
     }
+end
+
+function Scene.getSceneContext()
+    return Scene.scenes[Scene.currentScene].def
 end
 
 function Scene.switchScene(name)
@@ -56,6 +60,14 @@ function Scene.add(gameObject)
     table.insert(Scene.scenes[Scene.currentScene].objects, gameObject)
     --print(inspect(Scene.scenes[Scene.currentScene].objects))
     --Loveplay.event.dispatch("sceneObjectAdded", gameObject)
+end
+
+function Scene.removeScene(name)
+    if Scene.scenes[name] then
+        Scene.scenes[name] = nil
+    end
+
+    collectgarbage("collect")
 end
 
 function Scene.reset()
