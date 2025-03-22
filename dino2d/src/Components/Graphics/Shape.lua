@@ -26,12 +26,11 @@ return function()
     -- end
 
     function ShapeRendererComponent:__draw()
-        local oldColor = { love.graphics.getColor() }
         if #self.verts >= 3 then
             love.graphics.setColor(type(self.color) == "table" and self.color or Color.fromInt(self.color))
             love.graphics.polygon(self.fillmode, self.verts)
         end
-        love.graphics.setColor(oldColor)
+        love.graphics.setColor(1, 1, 1, 1)
     end
 
     return ShapeRendererComponent

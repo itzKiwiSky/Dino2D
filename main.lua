@@ -1,7 +1,26 @@
 local dino2d = require 'dino2d'
+local lust = nil
 
 dino2d.load({ debug = true })
+if love.arg.parseGameArguments(arg)[1] == "--test" then
+    lust = require 'Tests.Libraries.lust'
+    local fsutil = require 'dino2d.FSUtil'
 
+    local tests = fsutil.scanFolder("Tests/suites")
+    for _, test in ipairs(tests) do
+        dino2d.scene.reset()
+        local t = require((test:gsub("/", ".")):gsub("%.lua", ""))
+        t({
+            lust = lust,
+            dino2d = dino2d
+        })
+
+    end
+end
+
+
+
+--[[
 dino2d.scene.newScene("main", function(scene)
     local obj = dino2d.object({ "test" }, {
         dino2d.components.Transform,
@@ -45,4 +64,4 @@ dino2d.scene.newScene("main", function(scene)
     end
 end)
 
-dino2d.scene.switchScene("main")
+dino2d.scene.switchScene("main")]]--

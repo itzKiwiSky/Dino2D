@@ -1,9 +1,9 @@
-return function(tags, components)
+return function(components)
     local self = {}
     self.health = 5
     self.alive = true
     self.children = {}
-    self.tags = tags or {}
+    self.tags = {}
 
     local meta = { __index = {} }
     for _, component in ipairs(components) do
@@ -12,6 +12,8 @@ return function(tags, components)
         for k, v in pairs(c) do
             if type(v) == "function" then
                 meta.__index[k] = v
+            elseif type(v) == "string" then
+                table.insert(self.tags, v)
             else
                 self[k] = self[k] or v
             end

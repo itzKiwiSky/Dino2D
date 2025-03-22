@@ -1,10 +1,15 @@
 local camera = import 'Core.Camera'
 local Color = import 'Utils.Color'
 
-local LPScene = {}
-LPScene.scenes = {}
-LPScene.currentScene = "root"
-LPScene.camera = camera.new(0, 0)
+local Scene = {}
+Scene.scenes = {
+    ["root"] = {
+        objects = {},
+        def = function()end
+    }
+}
+Scene.currentScene = "root"
+Scene.camera = camera.new(0, 0)
 
 local function drawBGGrid(width, height, cellSize)
     for y = 0, math.floor(height), 1 do
@@ -31,53 +36,61 @@ function LPSceneEvents.sceneUpdate(elapsed)end
 
 ---------------------
 
-function LPScene.newScene(name, fun)
-    LPScene.scenes[name] = {
+function Scene.newScene(name, fun)
+    Scene.scenes[name] = {
         objects = {},
         def = fun
     }
 end
 
-function LPScene.switchScene(name)
-    LPScene.currentScene = name
-    LPScene.camera:setCameraPosition(push.getWidth() / 2, push.getHeight() / 2)
-    LPScene.scenes[LPScene.currentScene].def(LPSceneEvents)
+function Scene.switchScene(name)
+    Scene.currentScene = name
+    Scene.camera:setCameraPosition(Dino2D.push.getWidth() / 2, Dino2D.push.getHeight() / 2)
+    Scene.scenes[Scene.currentScene].def(LPSceneEvents)
     if LPSceneEvents.sceneLoad then
         LPSceneEvents.sceneLoad()
     end
 end
 
-function LPScene.add(gameObject)
-    table.insert(LPScene.scenes[LPScene.currentScene].objects, gameObject)
-    --print(inspect(LPScene.scenes[LPScene.currentScene].objects))
+function Scene.add(gameObject)
+    table.insert(Scene.scenes[Scene.currentScene].objects, gameObject)
+    --print(inspect(Scene.scenes[Scene.currentScene].objects))
     --Loveplay.event.dispatch("sceneObjectAdded", gameObject)
 end
 
-function LPScene.draw()
-    drawBGGrid(push.getWidth() / 32, push.getHeight() / 32, 32)
-    LPScene.camera:start()
-        for _, obj in ipairs(LPScene.scenes[LPScene.currentScene].objects) do
+function Scene.reset()
+    table.clear(Scene.scenes[Scene.currentScene].objects)
+end
+
+function Scene.getObjectCount()
+    return #Scene.scenes[Scene.currentScene].objects
+end
+
+function Scene.draw()
+    drawBGGrid(Dino2D.push.getWidth() / 32, Dino2D.push.getHeight() / 32, 32)
+    Scene.camera:start()
+        for _, obj in ipairs(Scene.scenes[Scene.currentScene].objects) do
             if obj.__draw then
                 obj:__draw(obj)
             end
         end
         love.graphics.origin()
-    LPScene.camera:stop()
+    Scene.camera:stop()
     if LPSceneEvents.sceneDraw then
         LPSceneEvents.sceneDraw()
     end
 end
 
-function LPScene.update(elapsed)
-    for _, obj in ipairs(LPScene.scenes[LPScene.currentScene].objects) do
+function Scene.update(elapsed)
+    for _, obj in ipairs(Scene.scenes[Scene.currentScene].objects) do
         if obj.__update then
             obj:__update(obj, elapsed)
         end
     end
     if LPSceneEvents.sceneUpdate then
-        LPSceneEvents.sceneUpdate(LPScene.scenes[LPScene.currentScene].objects, elapsed)
+        LPSceneEvents.sceneUpdate(Scene.scenes[Scene.currentScene].objects, elapsed)
     end
 end
 
 
-return LPScene
+return Scene

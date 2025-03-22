@@ -15,6 +15,9 @@ function Vec2.new(x, y)
     if type(x) == "table" and y == nil then
         self.x = x[1] or x.x or 0
         self.y = y[2] or x.y or 0
+    elseif x ~= nil and y == nil then
+        self.x = x
+        self.y = x
     else
         self.x = x
         self.y = y
@@ -62,19 +65,23 @@ end
 ---------------------------------------------------------------
 
 function Vec2:add(vec)
+    self.x, self.y = self.x + vec.x, self.y + vec.y
     return Vec2.new(self.x + vec.x, self.y + vec.y)
 end
 
 function Vec2:sub(vec)
+    self.x, self.y = self.x - vec.x, self.y - vec.y
     return Vec2.new(self.x - vec.x, self.y - vec.y)
 end
 
 
 function Vec2:mul(scalar)
+    self.x, self.y = self.x * scalar, self.y * scalar
     return Vec2.new(self.x * scalar, self.y * scalar)
 end
 
 function Vec2:div(scalar)
+    self.x, self.y = self.x / scalar, self.y / scalar
     return Vec2.new(self.x / scalar, self.y / scalar)
 end
 

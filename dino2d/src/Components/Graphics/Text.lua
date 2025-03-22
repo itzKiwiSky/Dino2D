@@ -19,14 +19,13 @@ return function()
     TextRendererComponent.shadowOffset = vec2(2, 2)
 
     function TextRendererComponent:__draw()
-        local oldColor = { love.graphics.getColor() }
         love.graphics.setColor(self.color)
             love.graphics.printf(self.text, self.font, self.pos.x, self.pos.y, self.textLimit, self.align)
             if self.shadow then
                 love.graphics.setColor(self.shadowColor)
                 love.graphics.printf(self.text, self.font, self.pos.x + self.shadowOffset.x, self.pos.y + self.shadowOffset.y, self.textLimit, self.align)
             end
-        love.graphics.setColor(oldColor)
+            love.graphics.setColor(1, 1, 1, 1)
     end
 
     return TextRendererComponent

@@ -16,6 +16,8 @@ return function()
         }
     end
 
+    print(inspect(RectangleShapeComponent))
+
     local shapeDraw = RectangleShapeComponent.__draw
 
     function RectangleShapeComponent:__draw()

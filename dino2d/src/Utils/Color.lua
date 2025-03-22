@@ -3,10 +3,11 @@ local bit = require 'bit'
 local Color = {}
 
 local function hexToRGBA(hex)
-    local r = bit.band(bit.rshift(hex, 24), 0xFF) / 255
-    local g = bit.band(bit.rshift(hex, 16), 0xFF) / 255
-    local b = bit.band(bit.rshift(hex, 8), 0xFF) / 255
-    local a = bit.band(hex, 0xFF) / 255
+    local hasAlpha = hex > 0xFFFFFF -- Verifica se há canal alpha
+    local r = bit.band(bit.rshift(hex, hasAlpha and 24 or 16), 0xFF) / 255
+    local g = bit.band(bit.rshift(hex, hasAlpha and 16 or 8), 0xFF) / 255
+    local b = bit.band(bit.rshift(hex, hasAlpha and 8 or 0), 0xFF) / 255
+    local a = hasAlpha and (bit.band(hex, 0xFF) / 255) or 1.0 -- Se não houver alpha, assume 1.0
     return { r, g, b, a }
 end
 

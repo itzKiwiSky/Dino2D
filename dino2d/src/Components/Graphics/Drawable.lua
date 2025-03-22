@@ -13,7 +13,6 @@ return function(...)
     }
 
     function DrawableComponent:__draw()
-        local oldColor = { love.graphics.getColor() }
         love.graphics.setColor(type(self.color) == "table" and self.color or Color.fromInt(self.color))
             love.graphics.draw(
                 self.drawable,
@@ -21,7 +20,7 @@ return function(...)
                 self.scale.x, self.scale.y, self.origin.x, self.origin.y,
                 self.shear.x, self.shear.y
             )
-        love.graphics.setColor(oldColor)
+        love.graphics.setColor(1, 1, 1, 1)
     end
 
     function DrawableComponent:centerOrigin()

@@ -13,7 +13,7 @@ end
 
 --- Attach camera to begin transformation
 function LPCamera:start()
-    local cx, cy = push.getWidth() / 2, push.getHeight() / 2
+    local cx, cy = Dino2D.push.getWidth() / 2, Dino2D.push.getHeight() / 2
     love.graphics.push("all")
     love.graphics.translate(cx, cy)
     love.graphics.scale(self.zoom)

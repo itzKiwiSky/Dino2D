@@ -9,13 +9,11 @@ function import(modname)
     return require(KIWI_PATH .. "src." .. modname)
 end
 
-class = require(KIWI_PATH .. "libraries.classic")
-xml = require(KIWI_PATH .. "libraries.xml")
+Dino2D.xml = require(KIWI_PATH .. "libraries.xml")
+Dino2D.json = require(KIWI_PATH .. "libraries.json")
 
-lume = require(KIWI_PATH .. "libraries.lume")
-enum = require(KIWI_PATH .. "libraries.enum")
-camera = require(KIWI_PATH .. "libraries.camera")
-push = require(KIWI_PATH .. "libraries.push")
+Dino2D.lume = require(KIWI_PATH .. "libraries.lume")
+Dino2D.push = require(KIWI_PATH .. "libraries.push")
 
 local fsutil = require(KIWI_PATH .. "FSutil")
 
@@ -84,10 +82,10 @@ function Dino2D.load(config)
         Dino2D.components[components[c]:match("[^/]+$"):gsub(".lua", "")] = require(comp:gsub("/", "%."))
     end
 
-    push.setupScreen(conf.width, conf.height, { upscale = conf.antialiasing and "normal" or "pixel-perfect" })
+    Dino2D.push.setupScreen(conf.width, conf.height, { upscale = conf.antialiasing and "normal" or "pixel-perfect" })
     
-    Dino2D.windowWidth = push.getWidth()
-    Dino2D.windowHeight = push.getHeight()
+    Dino2D.windowWidth = Dino2D.push.getWidth()
+    Dino2D.windowHeight = Dino2D.push.getHeight()
 
     -- create a default scene --
     Dino2D.scene.newScene(conf.scene, function() end)
@@ -103,10 +101,7 @@ function Dino2D.load(config)
         love.math.setRandomSeed(os.time())
         math.randomseed(os.time())
     
-        local fpsfont = love.graphics.newFont(16)
-    
-        local pargs = love.arg.parseGameArguments(arg)  -- parsed arguments
-        local rargs = arg   -- raw arguments
+        local fpsfont = Dino2D.assets.get(Dino2D.assets.ASSETTYPE.FONT, "fredoka", { fontsize = 18 })
 
         if love.timer then love.timer.step() end
 
@@ -121,8 +116,12 @@ function Dino2D.load(config)
                             return a or 0
                         end
                     elseif name == "resize" then
-                        push.resize(a, b)
+                        Dino2D.push.resize(a, b)
                     end
+
+                    -- process other events --
+                    
+
                     love.handlers[name](a,b,c,d,e,f)
                 end
             end
@@ -150,11 +149,16 @@ function Dino2D.load(config)
                 love.graphics.clear(love.graphics.getBackgroundColor())
                 
                     love.graphics.setColor(1, 1, 1, 1)
-                    push.start()
+                    Dino2D.push.start()
                         
                         love.graphics.draw(mainCanvas)
 
-                    push.finish()
+                        love.graphics.setColor(0, 0, 0, 0.5)
+                        love.graphics.rectangle("fill", 0, 0, fpsfont:getWidth("FPS: " .. love.timer.getFPS()) + 10, fpsfont:getHeight() + 10, 5)
+                        love.graphics.setColor(1, 1, 1, 1)
+                        love.graphics.print("FPS: " .. love.timer.getFPS(), fpsfont, 5, 5)
+
+                    Dino2D.push.finish()
     
                 love.graphics.present()
             end
@@ -167,7 +171,7 @@ function Dino2D.load(config)
         -- assets --
         local fonterr = love.graphics.newFont(KIWI_PATH .. "/assets/fonts/fredoka_regular.ttf", 18)
 
-        push.setupScreen(conf.width, conf.height, { upscale = "normal" })
+        Dino2D.push.setupScreen(conf.width, conf.height, { upscale = "normal" })
         local curTitle = love.window.getTitle()
 
         local function error_printer(msg, layer)
@@ -247,10 +251,10 @@ function Dino2D.load(config)
 
         local function __draw()
             love.graphics.clear(223 / 255, 77 / 255, 67 / 255)
-                push.start()
-                local pos = 70
-                love.graphics.printf(p, fonterr, pos, pos, push.getWidth() - pos)
-                push.finish()
+                Dino2D.push.start()
+                    local pos = 70
+                    love.graphics.printf(p, fonterr, pos, pos, push.getWidth() - pos)
+                Dino2D.push.finish()
             love.graphics.present()
         end
         
