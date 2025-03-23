@@ -11,11 +11,17 @@ local callbacks = {
     "onMousePressed",
     "onMouseReleased",
     "onWheelMoved",
+
+    "onDraw",
+    "onUpdate",
+    "onBootUp"
 }
 
 for _, callback in ipairs(callbacks) do
     Engine[callback] = signal.new()
 end
+
+Engine.timeScale = 1
 
 function Engine.init()
     

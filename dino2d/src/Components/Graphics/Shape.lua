@@ -9,21 +9,9 @@ return function()
         LINE = "line"
     }
 
-    ShapeRendererComponent.MODE = {
-        MESH = "mesh",
-        NATIVE = "native"
-    }
-
     ShapeRendererComponent.verts = {}
     ShapeRendererComponent.fillmode = ShapeRendererComponent.FILLSTYLE.FILL
     ShapeRendererComponent.color = Color.WHITE
-    --ShapeRendererComponent.mode = ShapeRendererComponent.MODE.NATIVE
-
-    --ShapeRendererComponent.__mesh = {}
-
-    -- if ShapeRendererComponent.mode == ShapeRendererComponent.MODE.MESH then
-    --     ShapeRendererComponent.__mesh = love.graphics.newMesh()
-    -- end
 
     function ShapeRendererComponent:__draw()
         if #self.verts >= 3 then

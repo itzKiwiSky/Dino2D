@@ -26,45 +26,48 @@ end
 
 ----- interfaces -----------
 
-local LPSceneEvents = {}
+local SceneEvents = {}
 
-function LPSceneEvents.sceneLoad()end
+function SceneEvents.sceneLoad()end
 
-function LPSceneEvents.sceneDraw()end
+function SceneEvents.sceneDraw()end
 
-function LPSceneEvents.sceneUpdate(elapsed)end
+function SceneEvents.sceneUpdate(elapsed)end
 
 ---------------------
 
 function Scene.newScene(name, fun)
     Scene.scenes[name] = {
         objects = {},
+        __meta = {
+            active = false,
+            dirty = false,
+        },
         def = fun or function() end
     }
-end
-
-function Scene.getSceneContext()
-    return Scene.scenes[Scene.currentScene].def
 end
 
 function Scene.switchScene(name)
     Scene.currentScene = name
     Scene.camera:setCameraPosition(Dino2D.push.getWidth() / 2, Dino2D.push.getHeight() / 2)
-    Scene.scenes[Scene.currentScene].def(LPSceneEvents)
-    if LPSceneEvents.sceneLoad then
-        LPSceneEvents.sceneLoad()
+    Scene.scenes[Scene.currentScene].def(SceneEvents)
+    if SceneEvents.sceneLoad then
+        SceneEvents.sceneLoad()
     end
 end
 
 function Scene.add(gameObject)
     table.insert(Scene.scenes[Scene.currentScene].objects, gameObject)
-    --print(inspect(Scene.scenes[Scene.currentScene].objects))
-    --Loveplay.event.dispatch("sceneObjectAdded", gameObject)
 end
 
 function Scene.removeScene(name)
     if Scene.scenes[name] then
-        Scene.scenes[name] = nil
+        if not Scene.scenes[name].__meta.active then
+            if Scene.scenes[name].__meta.dirty then
+                table.clear(Scene.scenes[name].object)
+            end
+            Scene.scenes[name] = nil
+        end
     end
 
     collectgarbage("collect")
@@ -88,8 +91,8 @@ function Scene.draw()
         end
         love.graphics.origin()
     Scene.camera:stop()
-    if LPSceneEvents.sceneDraw then
-        LPSceneEvents.sceneDraw()
+    if SceneEvents.sceneDraw then
+        SceneEvents.sceneDraw()
     end
 end
 
@@ -99,8 +102,8 @@ function Scene.update(elapsed)
             obj:__update(obj, elapsed)
         end
     end
-    if LPSceneEvents.sceneUpdate then
-        LPSceneEvents.sceneUpdate(Scene.scenes[Scene.currentScene].objects, elapsed)
+    if SceneEvents.sceneUpdate then
+        SceneEvents.sceneUpdate(Scene.scenes[Scene.currentScene].objects, elapsed)
     end
 end
 

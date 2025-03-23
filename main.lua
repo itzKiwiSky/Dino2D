@@ -1,7 +1,9 @@
 local dino2d = require 'dino2d'
 local lust = nil
 
+dino2d.engine.timeScale = 1
 dino2d.load({ debug = true })
+
 if love.arg.parseGameArguments(arg)[1] == "--test" then
     lust = require 'Tests.Libraries.lust'
     local fsutil = require 'dino2d.FSUtil'
@@ -14,54 +16,47 @@ if love.arg.parseGameArguments(arg)[1] == "--test" then
             lust = lust,
             dino2d = dino2d
         })
-
     end
 end
 
 
-
---[[
 dino2d.scene.newScene("main", function(scene)
-    local obj = dino2d.object({ "test" }, {
+    local circle = dino2d.object({
+        dino2d.components.Transform,
+        dino2d.components.Circle,
+    })
+
+    circle:center()
+    circle.color = 0xAAFF66
+
+    local rect = dino2d.object({
+        dino2d.components.Transform,
+        dino2d.components.Rectangle,
+    })
+
+    rect.pos = dino2d.Vec2(90, 90)
+    rect.size.w = 128
+    rect.size.h = 64
+    rect.color = 0xBBAA32
+
+    local img = dino2d.object({
         dino2d.components.Transform,
         dino2d.components.Drawable,
     })
 
-    obj.pos.x = 0
-    obj.pos.y = 0
-    obj.scale = dino2d.Vec2(0.4, 0.4)
-    obj:centerOrigin()
-    obj:center()
+    img.scale = dino2d.Vec2(0.5, 0.5)
+    img:centerOrigin()
+    img:center()
+    img.pos.x = img.pos.x + 160
 
-    local label = dino2d.object({ "label" }, {
-        dino2d.components.Transform,
-        dino2d.components.Text,
-    })
-
-    label.pos.y = 32
-    label.text = "Hello world"
-    label.align = label.ALIGNMENT.CENTER
-    label.textLimit = dino2d.windowWidth
-    label.color = dino2d.Color.WHITE
-    label.shadow = true
-
-    local rect = dino2d.object({ "rect" }, {
-        dino2d.components.Transform,
-        dino2d.components.Rectangle
-    })
-
-    rect.color = 0xFF00BB
-    rect.size.x = 96
-
-
-    dino2d.scene.add(obj)
-    dino2d.scene.add(label)
+    dino2d.scene.add(circle)
     dino2d.scene.add(rect)
+    dino2d.scene.add(img)
 
-    scene.sceneUpdate = function(st, elapsed)
-        --obj.pos.x = obj.pos.x + 10 * elapsed
-        rect.size.x = rect.size.x + 20 * elapsed
+    scene.sceneUpdate = function(elapsed)
+        --circle.pos.x = circle.pos.x + 100 * elapsed
+        circle.pos.y = dino2d.Math.wave(32, dino2d.windowHeight - 64, dino2d.getTime() * 2)
     end
 end)
 
-dino2d.scene.switchScene("main")]]--
+dino2d.scene.switchScene("main")

@@ -5,27 +5,29 @@ local Color = import 'Utils.Color'
 return function()
     local RectangleShapeComponent = {}
     table.deepmerge(RectangleShapeComponent, ShapeRenderer())
-    RectangleShapeComponent.size = vec2(32, 32)
+
+    RectangleShapeComponent.size = {
+        w = 32,
+        h = 32
+    }
 
     function RectangleShapeComponent:__init()
         self.verts = {
             self.pos.x, self.pos.y,
-            self.pos.x + RectangleShapeComponent.size.x, self.pos.y,
-            self.pos.x + RectangleShapeComponent.size.x, self.pos.y + RectangleShapeComponent.size.y,
-            self.pos.x, self.pos.y + RectangleShapeComponent.size.y,
+            self.pos.x + RectangleShapeComponent.size.w, self.pos.y,
+            self.pos.x + RectangleShapeComponent.size.w, self.pos.y + RectangleShapeComponent.size.h,
+            self.pos.x, self.pos.y + RectangleShapeComponent.size.h,
         }
     end
-
-    print(inspect(RectangleShapeComponent))
 
     local shapeDraw = RectangleShapeComponent.__draw
 
     function RectangleShapeComponent:__draw()
         self.verts = {
             self.pos.x, self.pos.y,
-            self.pos.x + RectangleShapeComponent.size.x, self.pos.y,
-            self.pos.x + RectangleShapeComponent.size.x, self.pos.y + RectangleShapeComponent.size.y,
-            self.pos.x, self.pos.y + RectangleShapeComponent.size.y,
+            self.pos.x + RectangleShapeComponent.size.w, self.pos.y,
+            self.pos.x + RectangleShapeComponent.size.w, self.pos.y + RectangleShapeComponent.size.h,
+            self.pos.x, self.pos.y + RectangleShapeComponent.size.h,
         }
         -- super --
         shapeDraw(self)

@@ -7,7 +7,7 @@ return function()
     }
 
     function TransformComponent:center(this)
-        self.pos.x, self.pos.y = Dino2D.pushpush.getWidth() / 2, Dino2D.pushpush.getHeight() / 2
+        self.pos.x, self.pos.y = Dino2D.push.getWidth() / 2, Dino2D.push.getHeight() / 2
     end
 
     return TransformComponent

@@ -27,16 +27,22 @@ end
 Dino2D.components = {}
 
 -- apis --
+Dino2D.Math = import 'Math.Math'
 Dino2D.Vec2 = import 'Math.Vec2'
 Dino2D.scene = import 'Core.Scene'
 Dino2D.object = import 'Core.Object'
 Dino2D.assets = import 'Core.AssetPool'
 Dino2D.signal = import 'Utils.Signal'
 Dino2D.Color = import 'Utils.Color'
+Dino2D.engine = import 'Core.Engine'
 
 -- preload some essential stuff --
 Dino2D.assets.addImage("logo", KIWI_PATH .. "/assets/images/icon.png")
 Dino2D.assets.addFont("fredoka", KIWI_PATH .. "/assets/fonts/fredoka_regular.ttf")
+
+Dino2D.getTime = function()
+    return love.timer.getTime() * Dino2D.engine.timeScale
+end
 
 Dino2D.initialized = false
 
@@ -103,6 +109,8 @@ function Dino2D.load(config)
     
         local fpsfont = Dino2D.assets.get(Dino2D.assets.ASSETTYPE.FONT, "fredoka", { fontsize = 18 })
 
+        Dino2D.engine.onBootUp:trigger()
+
         if love.timer then love.timer.step() end
 
         local elapsed = 0
@@ -120,8 +128,6 @@ function Dino2D.load(config)
                     end
 
                     -- process other events --
-                    
-
                     love.handlers[name](a,b,c,d,e,f)
                 end
             end
@@ -130,7 +136,7 @@ function Dino2D.load(config)
     
             local fpsCap = isFocused and love._FPSCap or love._unfocusedFPSCap
             if love.timer then 
-                elapsed = love.timer.step()
+                elapsed = love.timer.step() * Dino2D.engine.timeScale
             end
 
             Dino2D.scene.update(elapsed)
@@ -154,7 +160,7 @@ function Dino2D.load(config)
                         love.graphics.draw(mainCanvas)
 
                         love.graphics.setColor(0, 0, 0, 0.5)
-                        love.graphics.rectangle("fill", 0, 0, fpsfont:getWidth("FPS: " .. love.timer.getFPS()) + 10, fpsfont:getHeight() + 10, 5)
+                            love.graphics.rectangle("fill", 0, 0, fpsfont:getWidth("FPS: " .. love.timer.getFPS()) + 10, fpsfont:getHeight() + 10, 5)
                         love.graphics.setColor(1, 1, 1, 1)
                         love.graphics.print("FPS: " .. love.timer.getFPS(), fpsfont, 5, 5)
 
@@ -162,6 +168,8 @@ function Dino2D.load(config)
     
                 love.graphics.present()
             end
+
+            love.timer.sleep(1 / fpsCap - elapsed)
         end
     end
 
